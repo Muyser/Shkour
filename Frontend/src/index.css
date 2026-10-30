@@ -1,0 +1,140 @@
+@import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 43 37% 96%;
+    --foreground: 220 49% 20%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 49% 20%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 49% 20%;
+    --primary: 220 49% 20%;
+    --primary-foreground: 43 37% 97%;
+    --secondary: 220 18% 94%;
+    --secondary-foreground: 220 49% 20%;
+    --muted: 40 24% 93%;
+    --muted-foreground: 220 12% 42%;
+    --accent: 39 48% 56%;
+    --accent-foreground: 220 49% 14%;
+    --destructive: 0 65% 48%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 40 18% 87%;
+    --input: 40 18% 86%;
+    --ring: 39 48% 56%;
+    --gold: 39 48% 56%;
+    --gold-foreground: 220 49% 14%;
+    --mint: 177 41% 91%;
+    --mint-foreground: 178 45% 22%;
+    --chart-1: 220 49% 20%;
+    --chart-2: 39 48% 56%;
+    --chart-3: 177 41% 45%;
+    --chart-4: 30 60% 62%;
+    --chart-5: 200 45% 55%;
+    --radius: 0.9rem;
+    --font-heading: 'Amiri', 'Times New Roman', serif;
+    --font-body: 'IBM Plex Sans Arabic', system-ui, sans-serif;
+    --font-display: 'Amiri', 'Times New Roman', serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    --sidebar-background: 220 49% 16%;
+    --sidebar-foreground: 43 37% 94%;
+    --sidebar-primary: 39 48% 56%;
+    --sidebar-primary-foreground: 220 49% 14%;
+    --sidebar-accent: 220 40% 24%;
+    --sidebar-accent-foreground: 43 37% 96%;
+    --sidebar-border: 220 35% 28%;
+    --sidebar-ring: 39 48% 56%;
+  }
+
+  .dark {
+    --background: 220 45% 9%;
+    --foreground: 43 37% 95%;
+    --card: 220 42% 12%;
+    --card-foreground: 43 37% 95%;
+    --popover: 220 42% 12%;
+    --popover-foreground: 43 37% 95%;
+    --primary: 43 37% 95%;
+    --primary-foreground: 220 49% 14%;
+    --secondary: 220 35% 18%;
+    --secondary-foreground: 43 37% 95%;
+    --muted: 220 35% 18%;
+    --muted-foreground: 43 15% 70%;
+    --accent: 39 48% 56%;
+    --accent-foreground: 220 49% 12%;
+    --destructive: 0 62% 45%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 30% 22%;
+    --input: 220 30% 24%;
+    --ring: 39 48% 56%;
+    --gold: 39 48% 56%;
+    --gold-foreground: 220 49% 12%;
+    --mint: 177 30% 24%;
+    --mint-foreground: 177 41% 90%;
+    --sidebar-background: 220 45% 10%;
+    --sidebar-foreground: 43 37% 92%;
+    --sidebar-primary: 39 48% 56%;
+    --sidebar-primary-foreground: 220 49% 12%;
+    --sidebar-accent: 220 35% 18%;
+    --sidebar-accent-foreground: 43 37% 96%;
+    --sidebar-border: 220 30% 20%;
+    --sidebar-ring: 39 48% 56%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground font-body antialiased;
+    line-height: 1.7;
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-heading;
+    line-height: 1.35;
+  }
+
+  ::selection {
+    background: hsl(var(--gold) / 0.28);
+  }
+}
+
+@layer utilities {
+  .container-page {
+    @apply mx-auto w-full max-w-6xl px-5 sm:px-8;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .soft-card {
+    @apply rounded-[var(--radius)] border border-border/70 bg-card shadow-[0_1px_2px_rgba(26,43,76,0.04),0_12px_32px_-24px_rgba(26,43,76,0.35)];
+  }
+
+  .hairline {
+    @apply border-t border-border/70;
+  }
+
+  .gold-rule {
+    background: linear-gradient(90deg, hsl(var(--gold)), hsl(var(--gold) / 0));
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
