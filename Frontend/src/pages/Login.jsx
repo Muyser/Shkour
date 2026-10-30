@@ -59,7 +59,7 @@ export default function Login() {
           </>
         }
       >
-        {error && <div className="mb-4 p-3 rounded-lg bg-destructive/10 text-destructive text-sm text-right">{error}</div>}
+        {error && <div className="mb-4 p-3 rounded-2xl bg-destructive/10 text-destructive text-sm text-right">{error}</div>}
 
         <form onSubmit={handleSubmit} className="space-y-4 text-right">
           <div className="space-y-2">
@@ -72,7 +72,7 @@ export default function Login() {
                 placeholder="muyser@gmail.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="pr-10 h-12 text-left"
+                className="pr-10 h-12 text-left rounded-2xl"
                 dir="ltr"
                 required
               />
@@ -94,15 +94,22 @@ export default function Login() {
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="pr-10 h-12 text-left"
+                className="pr-10 h-12 text-left rounded-2xl"
                 dir="ltr"
                 required
               />
             </div>
           </div>
 
-          <Button type="submit" className="w-full h-12 font-medium" disabled={loading}>
-            {loading ? <Loader2 className="w-4 h-4 ml-2 animate-spin" /> : "تسجيل الدخول"}
+          <Button type="submit" className="w-full h-12 font-medium rounded-2xl" disabled={loading}>
+            {loading ? (
+              <>
+                <Loader2 className="w-4 h-4 ml-2 animate-spin" />
+                جارٍ تسجيل الدخول...
+              </>
+            ) : (
+              "تسجيل الدخول"
+            )}
           </Button>
         </form>
       </AuthLayout>
