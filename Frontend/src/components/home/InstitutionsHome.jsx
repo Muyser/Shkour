@@ -35,9 +35,9 @@ export default function InstitutionsHome() {
   }, []);
 
   return (
-    <section className="bg-white py-12 sm:py-24" dir="rtl">
-      <div className="container-page">
-        <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-end">
+    <section className="bg-white py-8 sm:py-16" dir="rtl">
+      <div className="container-page px-4 sm:px-6">
+        <div className="flex flex-col items-start justify-between gap-3 md:flex-row md:items-end">
           <SectionHeading
             align="start"
             eyebrow="دليل المؤسسات"
@@ -54,20 +54,22 @@ export default function InstitutionsHome() {
           </div>
         </div>
 
-        {/* شبكة بسيطة: بطاقة واحدة لكل صف في الموبايل وتبسط على الشاشات الأكبر */}
-        <div className="mt-8 grid grid-cols-1 gap-4 sm:mt-12 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
+        {/* بطاقة واحدة لكل صف على الموبايل بنفس أسلوب قسم الدول بالضبط */}
+        <div className="mt-6 sm:mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {loading ? (
             Array.from({ length: 6 }).map((_, index) => (
-              <Skeleton key={index} className="h-64 sm:h-[360px] rounded-2xl" />
+              <Skeleton key={index} className="h-64 sm:h-[360px] rounded-3xl max-w-[280px] sm:max-w-none mx-auto w-full" />
             ))
           ) : items.length > 0 ? (
             items.map((institution, index) => (
               <Reveal key={institution._id} delay={index * 0.04}>
-                <InstitutionCard institution={institution} />
+                <div className="max-w-[280px] sm:max-w-none mx-auto w-full h-full overflow-hidden rounded-3xl sm:rounded-[2.5rem] border border-slate-100 bg-white shadow-2xl transition-all duration-300 hover:scale-[1.01]">
+                  <InstitutionCard institution={institution} />
+                </div>
               </Reveal>
             ))
           ) : (
-            <p className="col-span-full py-10 text-center text-sm text-slate-500">لا توجد مؤسسات مضافة حالياً.</p>
+            <p className="col-span-full py-10 text-center text-xs sm:text-sm text-slate-500">لا توجد مؤسسات مضافة حالياً.</p>
           )}
         </div>
 

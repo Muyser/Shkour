@@ -37,24 +37,24 @@ export default function GalleryHome() {
 
   return (
     <section className="bg-white py-8 sm:py-16" dir="rtl">
-      <div className="container-page">
+      <div className="container-page px-3 sm:px-6">
         <SectionHeading
           eyebrow="المعرض"
           title="معرض الطلاب"
           description="لحظات من رحلة طلابنا: وصول، تسجيل، وتخرّج."
         />
 
-        <div className="mt-5 sm:mt-8 columns-2 gap-3 sm:gap-4 md:columns-3 [&>*]:mb-3 sm:[&>*]:mb-4 text-right">
+        <div className="mt-6 sm:mt-10 columns-2 gap-3 sm:gap-4 md:columns-3 [&>*]:mb-3 sm:[&>*]:mb-4 text-right">
           {loading ? (
             Array.from({ length: 6 }).map((_, index) => (
-              <Skeleton key={index} className="h-40 sm:h-48 w-full break-inside-avoid rounded-2xl" />
+              <Skeleton key={index} className="h-40 sm:h-48 w-full break-inside-avoid rounded-3xl" />
             ))
           ) : items.length > 0 ? (
             items.map((item) => (
               <Link
                 to="/gallery"
                 key={item._id}
-                className="group relative block break-inside-avoid overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:shadow-md"
+                className="group relative block break-inside-avoid overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-md sm:shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
               >
                 {item.media_type === "video" ? (
                   <div className="relative flex h-40 sm:h-48 items-center justify-center bg-slate-900">
@@ -68,7 +68,7 @@ export default function GalleryHome() {
                     loading="lazy"
                   />
                 ) : (
-                  <div className="flex h-40 sm:h-48 items-center justify-center bg-slate-100 text-[11px] sm:text-xs text-slate-500 p-3 text-center">
+                  <div className="flex h-40 sm:h-48 items-center justify-center bg-slate-50 text-[11px] sm:text-xs text-slate-500 p-3 text-center">
                     {item.title || item.student_name || "صورة من المعرض"}
                   </div>
                 )}
@@ -86,7 +86,7 @@ export default function GalleryHome() {
           )}
         </div>
 
-        <div className="mt-5 sm:mt-8 text-center">
+        <div className="mt-6 text-center sm:mt-10">
           <Link to="/gallery" className="inline-flex items-center gap-1.5 text-xs font-bold text-[#0d8274] hover:underline sm:text-sm">
             كل الصور والفيديوهات
             <ArrowLeft className="h-3.5 w-3.5 rotate-180 sm:h-4 sm:w-4" />

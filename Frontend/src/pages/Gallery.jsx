@@ -50,28 +50,28 @@ export default function Gallery() {
         description="صور وفيديوهات من رحلات طلابنا: وصول، تسجيل في الجامعات، وتخرّج."
       />
 
-      <div className="container-page py-10 sm:py-16">
+      <div className="container-page py-8 sm:py-16 px-3 sm:px-6">
         <Tabs value={filter} onValueChange={setFilter} className="mb-6 sm:mb-8">
-          <TabsList className="bg-slate-100 rounded-2xl p-1 border border-slate-200">
-            <TabsTrigger value="all" className="rounded-xl text-xs sm:text-sm data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm">الكل</TabsTrigger>
-            <TabsTrigger value="image" className="rounded-xl text-xs sm:text-sm data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm">صور</TabsTrigger>
-            <TabsTrigger value="video" className="rounded-xl text-xs sm:text-sm data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-sm">فيديوهات</TabsTrigger>
+          <TabsList className="inline-flex h-auto w-auto items-center justify-start bg-slate-100 rounded-2xl sm:rounded-3xl p-1.5 border border-slate-200 shadow-inner gap-1">
+            <TabsTrigger value="all" className="rounded-xl sm:rounded-2xl px-4 py-2 text-xs sm:text-sm data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-md transition-all">الكل</TabsTrigger>
+            <TabsTrigger value="image" className="rounded-xl sm:rounded-2xl px-4 py-2 text-xs sm:text-sm data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-md transition-all">صور</TabsTrigger>
+            <TabsTrigger value="video" className="rounded-xl sm:rounded-2xl px-4 py-2 text-xs sm:text-sm data-[state=active]:bg-white data-[state=active]:text-slate-900 data-[state=active]:shadow-md transition-all">فيديوهات</TabsTrigger>
           </TabsList>
         </Tabs>
 
         {loading ? (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {Array.from({ length: 6 }).map((_, index) => (
-              <Skeleton key={index} className="h-56 sm:h-64 w-full rounded-2xl" />
+              <Skeleton key={index} className="h-56 sm:h-64 rounded-3xl max-w-[280px] sm:max-w-none mx-auto w-full shadow-sm" />
             ))}
           </div>
         ) : visible.length ? (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {visible.map((item) => (
               <button
                 key={item._id}
                 onClick={() => setActive(item)}
-                className="group relative block w-full overflow-hidden rounded-2xl border border-slate-200 bg-white text-right transition duration-300 hover:shadow-md"
+                className="max-w-[280px] sm:max-w-none mx-auto w-full group relative block overflow-hidden rounded-3xl border border-slate-100 bg-white text-right shadow-2xl transition-all duration-300 hover:scale-[1.01]"
               >
                 {item.media_type === "video" ? (
                   <div className="relative flex h-56 sm:h-64 w-full items-center justify-center bg-[#092c27]/90 overflow-hidden">
@@ -82,12 +82,12 @@ export default function Gallery() {
                       preload="metadata"
                     />
                     <div className="absolute inset-0 bg-slate-900/30 transition duration-300 group-hover:bg-slate-900/10" />
-                    <div className="relative z-10 flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-amber-500 text-slate-900 shadow-lg transition duration-300 group-hover:scale-110">
+                    <div className="relative z-10 flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-full bg-amber-500 text-slate-900 shadow-xl transition duration-300 group-hover:scale-110">
                       <Play className="h-5 w-5 sm:h-6 sm:w-6 translate-x-0.5 fill-current" />
                     </div>
                   </div>
                 ) : (
-                  <div className="h-56 sm:h-64 w-full overflow-hidden bg-slate-100">
+                  <div className="h-56 sm:h-64 w-full overflow-hidden bg-slate-50">
                     <Image
                       src={item.media_url}
                       alt={item.student_name || "معرض الطلاب"}
@@ -115,7 +115,7 @@ export default function Gallery() {
       </div>
 
       <Dialog open={Boolean(active)} onOpenChange={(open) => !open && setActive(null)}>
-        <DialogContent className="max-w-2xl overflow-hidden rounded-2xl bg-white border border-slate-200 p-0 shadow-lg" dir="rtl">
+        <DialogContent className="max-w-2xl overflow-hidden rounded-3xl bg-white border border-slate-100 p-0 shadow-2xl" dir="rtl">
           <DialogTitle className="sr-only">{active?.student_name || "معرض الطلاب"}</DialogTitle>
           {active?.media_type === "video" ? (
             <div className="relative bg-slate-950 flex items-center justify-center max-h-[60vh] sm:max-h-[70vh] w-full">
@@ -134,7 +134,7 @@ export default function Gallery() {
             <p className="mt-1 text-[11px] sm:text-xs text-amber-600 font-semibold">
               {[active?.program, active?.university, active?.country].filter(Boolean).join(" · ")}
             </p>
-            {active?.description ? <p className="mt-2.5 text-xs sm:text-sm text-slate-700 leading-6 sm:leading-7">{active.description}</p> : null}
+            {active?.description ? <p className="mt-2.5 text-xs sm:text-sm text-slate-700 leading-relaxed sm:leading-7">{active.description}</p> : null}
           </div>
         </DialogContent>
       </Dialog>

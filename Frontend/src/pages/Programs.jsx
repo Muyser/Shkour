@@ -44,24 +44,27 @@ export default function Programs() {
         description="تعرّف على التخصصات المتاحة في المؤسسات التعليمية، واختر المسار الذي يناسب مهاراتك وطموحك."
       />
 
-      <div className="container-page py-12 sm:py-24">
+      <div className="container-page py-8 sm:py-16 px-3 sm:px-6">
         {loading ? (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
             {Array.from({ length: 6 }).map((_, index) => (
-              <Skeleton key={index} className="h-40 sm:h-48 rounded-2xl" />
+              <Skeleton key={index} className="h-40 sm:h-48 rounded-3xl shadow-sm" />
             ))}
           </div>
         ) : programs.length ? (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3 text-right">
             {programs.map((program) => (
-              <article key={program._id} className="flex h-full flex-col rounded-2xl border border-slate-200 bg-white p-5 sm:p-6 shadow-sm transition-all duration-300 hover:border-[#0d8274]/30 hover:shadow-md">
+              <article 
+                key={program._id} 
+                className="flex h-full flex-col rounded-3xl border border-slate-100 bg-white p-5 sm:p-6 shadow-md sm:shadow-lg transition-all duration-300 hover:-translate-y-1 hover:border-[#0d8274]/30 hover:shadow-xl"
+              >
                 <div className="flex items-center gap-3">
                   <span className="flex h-10 w-10 sm:h-12 sm:w-12 shrink-0 items-center justify-center rounded-2xl bg-[#0d8274]/10 text-[#0d8274]">
                     <ServiceIcon name={program.icon || "BookOpen"} />
                   </span>
                   <h2 className="font-heading text-base sm:text-lg font-bold text-slate-900">{program.name}</h2>
                 </div>
-                <p className="mt-3 sm:mt-4 flex-1 text-xs sm:text-sm leading-6 sm:leading-7 text-slate-600">
+                <p className="mt-3 sm:mt-4 flex-1 text-xs sm:text-sm leading-relaxed sm:leading-7 text-slate-600">
                   {program.description || "لا توجد نبذة تعريفية متاحة لهذا التخصص حالياً."}
                 </p>
                 {program.degree ? (

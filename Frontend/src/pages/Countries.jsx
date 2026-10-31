@@ -40,16 +40,21 @@ export default function Countries() {
         title="وجهتك القادمة تبدأ باختيارك 🌍"
         description="كل دولة تجربة تعليمية مختلفة: تكلفة، لغة، ونظام قبول. تعرّف على الخيارات واختر ما يناسبك."
       />
-      <section className="bg-white py-12 sm:py-24">
-        <div className="container-page">
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
+      <section className="bg-white py-8 sm:py-16">
+        <div className="container-page px-3 sm:px-6">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {loading ? (
               Array.from({ length: 6 }).map((_, index) => (
-                <Skeleton key={index} className="h-64 sm:h-72 rounded-2xl" />
+                <Skeleton key={index} className="h-64 sm:h-72 rounded-3xl max-w-[280px] sm:max-w-none mx-auto w-full shadow-sm" />
               ))
             ) : countries.length > 0 ? (
               countries.map((country) => (
-                <CountryCard key={country._id} country={country} />
+                <div 
+                  key={country._id}
+                  className="max-w-[280px] sm:max-w-none mx-auto w-full h-full overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-2xl transition-all duration-300 hover:scale-[1.01]"
+                >
+                  <CountryCard country={country} />
+                </div>
               ))
             ) : (
               <p className="col-span-full py-10 text-center text-xs sm:text-sm text-slate-500">

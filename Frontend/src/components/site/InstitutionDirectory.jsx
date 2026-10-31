@@ -112,17 +112,17 @@ export default function InstitutionDirectory({ type }) {
   };
 
   return (
-    <div className="bg-white py-12 sm:py-24" dir="rtl">
-      <div className="container-page">
+    <div className="bg-white py-8 sm:py-16" dir="rtl">
+      <div className="container-page px-3 sm:px-6">
         {/* شريط البحث وفلاتر الدول والتخصصات */}
-        <div className="mb-8 sm:mb-10 flex flex-col gap-3 sm:gap-4 md:flex-row md:items-center md:justify-between">
+        <div className="mb-8 flex flex-col gap-3 sm:gap-4 md:flex-row md:items-center md:justify-between">
           <div className="flex-1 max-w-md">
             <input
               type="text"
               value={searchQuery}
               onChange={handleSearchChange}
               placeholder="ابحث بالاسم..."
-              className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-2.5 sm:py-3 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 shadow-sm focus:border-[#0d8274] focus:outline-none focus:ring-1 focus:ring-[#0d8274]"
+              className="w-full rounded-2xl sm:rounded-3xl border border-slate-200 bg-white px-4 py-3 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 shadow-sm focus:border-[#0d8274] focus:outline-none focus:ring-1 focus:ring-[#0d8274]"
             />
           </div>
 
@@ -131,7 +131,7 @@ export default function InstitutionDirectory({ type }) {
             <select
               value={selectedCountry}
               onChange={handleCountryChange}
-              className="rounded-2xl border border-slate-200 bg-white px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm text-slate-900 shadow-sm focus:border-[#0d8274] focus:outline-none focus:ring-1 focus:ring-[#0d8274]"
+              className="rounded-2xl sm:rounded-3xl border border-slate-200 bg-white px-3 sm:px-4 py-3 text-xs sm:text-sm text-slate-900 shadow-sm focus:border-[#0d8274] focus:outline-none focus:ring-1 focus:ring-[#0d8274]"
             >
               <option value="">كل الدول</option>
               {countries.map((country) => (
@@ -145,7 +145,7 @@ export default function InstitutionDirectory({ type }) {
             <select
               value={selectedProgram}
               onChange={handleProgramChange}
-              className="rounded-2xl border border-slate-200 bg-white px-3 sm:px-4 py-2.5 sm:py-3 text-xs sm:text-sm text-slate-900 shadow-sm focus:border-[#0d8274] focus:outline-none focus:ring-1 focus:ring-[#0d8274]"
+              className="rounded-2xl sm:rounded-3xl border border-slate-200 bg-white px-3 sm:px-4 py-3 text-xs sm:text-sm text-slate-900 shadow-sm focus:border-[#0d8274] focus:outline-none focus:ring-1 focus:ring-[#0d8274]"
             >
               <option value="">كل التخصصات</option>
               {programsList.map((prog) => (
@@ -157,17 +157,22 @@ export default function InstitutionDirectory({ type }) {
           </div>
         </div>
 
-        {/* عرض النتائج أو الهياكل الوهمية أثناء التحميل (بطاقة واحدة في الهواتف grid-cols-1) */}
+        {/* عرض النتائج أو الهياكل الوهمية أثناء التحميل */}
         {loading ? (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {Array.from({ length: 6 }).map((_, idx) => (
-              <Skeleton key={idx} className="h-64 sm:h-[360px] rounded-2xl" />
+              <Skeleton key={idx} className="h-64 sm:h-[360px] rounded-3xl max-w-[280px] sm:max-w-none mx-auto w-full shadow-sm" />
             ))}
           </div>
         ) : institutions.length > 0 ? (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {institutions.map((institution) => (
-              <InstitutionCard key={institution._id} institution={institution} />
+              <div 
+                key={institution._id} 
+                className="max-w-[280px] sm:max-w-none mx-auto w-full h-full overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-2xl transition-all duration-300 hover:scale-[1.01]"
+              >
+                <InstitutionCard institution={institution} />
+              </div>
             ))}
           </div>
         ) : (
@@ -177,7 +182,7 @@ export default function InstitutionDirectory({ type }) {
             action={
               <Button
                 variant="outline"
-                className="rounded-2xl border-slate-200 text-xs sm:text-sm text-slate-700 hover:bg-slate-50"
+                className="rounded-2xl border-slate-200 text-xs sm:text-sm text-slate-700 hover:bg-slate-50 shadow-sm"
                 onClick={() => {
                   setSearchParams({});
                 }}

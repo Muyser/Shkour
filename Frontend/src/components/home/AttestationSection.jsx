@@ -12,8 +12,8 @@ const ITEMS = [
 
 export default function AttestationSection() {
   return (
-    <section className="bg-white py-12 sm:py-24" dir="rtl">
-      <div className="container-page">
+    <section className="bg-white py-8 sm:py-16" dir="rtl">
+      <div className="container-page px-3 sm:px-6">
         <div className="grid gap-8 lg:grid-cols-[1fr_1.15fr] lg:items-center">
           <div>
             <SectionHeading
@@ -34,7 +34,7 @@ export default function AttestationSection() {
           <div className="grid gap-3 sm:gap-4 sm:grid-cols-2 text-right">
             {ITEMS.map((item, index) => (
               <Reveal key={item.title} delay={index * 0.05}>
-                <div className="h-full rounded-2xl border border-slate-200 bg-white p-4 sm:p-6 shadow-sm transition hover:shadow-md">
+                <div className="h-full rounded-2xl sm:rounded-3xl border border-slate-100 bg-white p-4 sm:p-6 shadow-md sm:shadow-lg transition-all duration-300 hover:-translate-y-1 hover:border-[#0d8274]/30 hover:shadow-xl">
                   <span className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-[#0d8274]/10 text-[#0d8274]">
                     <Stamp className="h-4 w-4 sm:h-5 sm:w-5" />
                   </span>

@@ -64,20 +64,20 @@ export default function CountryDetail() {
 
   if (loading) {
     return (
-      <div className="container-page py-12 sm:py-16 bg-white min-h-screen" dir="rtl">
-        <Skeleton className="h-56 sm:h-64 w-full rounded-2xl" />
+      <div className="container-page py-12 sm:py-16 bg-white min-h-screen px-3 sm:px-6" dir="rtl">
+        <Skeleton className="h-56 sm:h-64 w-full rounded-3xl" />
       </div>
     );
   }
 
   if (!country) {
     return (
-      <div className="container-page py-12 sm:py-16 bg-white min-h-screen" dir="rtl">
+      <div className="container-page py-12 sm:py-16 bg-white min-h-screen px-3 sm:px-6" dir="rtl">
         <EmptyState
           title="الدولة غير موجودة"
           description="تعذر العثور على بيانات هذه الدولة أو ربما تم حذفها."
           action={
-            <Button asChild className="rounded-2xl bg-amber-500 text-slate-900 hover:bg-amber-400">
+            <Button asChild className="rounded-2xl bg-amber-500 text-slate-900 hover:bg-amber-400 shadow-md">
               <Link to="/countries">كل الدول</Link>
             </Button>
           }
@@ -101,7 +101,7 @@ export default function CountryDetail() {
           )}
           <div className="absolute inset-0 bg-gradient-to-l from-[#092c27]/95 via-[#092c27]/85 to-[#092c27]/60" />
         </div>
-        <div className="container-page relative py-12 sm:py-20 text-white">
+        <div className="container-page relative py-12 sm:py-20 text-white px-3 sm:px-6">
           <Link to="/countries" className="inline-flex items-center gap-1.5 text-xs font-medium text-white/75 hover:text-amber-400 transition-colors">
             <ArrowLeft className="h-3.5 w-3.5 rotate-180" />
             كل الدول
@@ -109,17 +109,17 @@ export default function CountryDetail() {
           <h1 className="mt-3 sm:mt-4 font-heading text-2xl sm:text-3xl lg:text-[2.7rem] font-extrabold leading-tight">
             الدراسة في {country.name} {country.flag || ""}
           </h1>
-          <p className="mt-3 sm:mt-4 max-w-2xl text-xs sm:text-sm leading-6 sm:leading-8 text-white/80">
+          <p className="mt-3 sm:mt-4 max-w-2xl text-xs sm:text-sm leading-relaxed sm:leading-8 text-white/80">
             {country.description || "معلومات تفصيلية حول الدراسة والجامعات المتاحة في هذه الدولة."}
           </p>
           <div className="mt-6 flex flex-col gap-2.5 sm:flex-row">
-            <Button asChild className="w-full sm:w-auto rounded-2xl bg-amber-500 font-bold text-slate-900 hover:bg-amber-400 shadow-sm text-xs sm:text-sm py-3">
+            <Button asChild className="w-full sm:w-auto rounded-2xl bg-amber-500 font-bold text-slate-900 hover:bg-amber-400 shadow-md text-xs sm:text-sm py-4">
               <Link to={`/universities?country_id=${country._id}`}>
                 جامعات {country.name}
                 <ArrowLeft className="ms-2 h-4 w-4 rotate-180" />
               </Link>
             </Button>
-            <Button asChild variant="ghost" className="w-full sm:w-auto rounded-2xl text-white hover:bg-white/10 hover:text-white text-xs sm:text-sm py-3">
+            <Button asChild variant="ghost" className="w-full sm:w-auto rounded-2xl text-white hover:bg-white/10 hover:text-white text-xs sm:text-sm py-4">
               <a href={waLink(undefined, `مرحبًا، أريد معلومات عن الدراسة في ${country.name}.`)} target="_blank" rel="noopener noreferrer">
                 <MessageCircle className="ms-2 h-4 w-4 text-emerald-400" />
                 استفسر عبر واتساب
@@ -129,15 +129,15 @@ export default function CountryDetail() {
         </div>
       </section>
 
-      <div className="container-page py-12 sm:py-24">
+      <div className="container-page py-8 sm:py-16 px-3 sm:px-6">
         <div className="grid gap-8 lg:grid-cols-[1fr_2fr]">
           <aside className="space-y-6 text-right">
             {country.highlights && country.highlights.length > 0 && (
-              <div className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-6 shadow-sm">
+              <div className="rounded-3xl border border-slate-100 bg-white p-5 sm:p-6 shadow-md sm:shadow-lg">
                 <h2 className="font-heading text-sm sm:text-base font-bold text-slate-900">مزايا الدراسة هنا</h2>
                 <ul className="mt-3.5 space-y-2.5">
                   {country.highlights.map((item, idx) => (
-                    <li key={idx} className="flex items-start gap-2 text-xs sm:text-sm leading-6 sm:leading-7 text-slate-600">
+                    <li key={idx} className="flex items-start gap-2 text-xs sm:text-sm leading-relaxed sm:leading-7 text-slate-600">
                       <CheckCircle2 className="mt-0.5 sm:mt-1 h-4 w-4 shrink-0 text-amber-500" />
                       <span>{item}</span>
                     </li>
@@ -147,14 +147,14 @@ export default function CountryDetail() {
             )}
 
             {programs.length > 0 && (
-              <div className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-6 shadow-sm">
+              <div className="rounded-3xl border border-slate-100 bg-white p-5 sm:p-6 shadow-md sm:shadow-lg">
                 <h2 className="font-heading text-sm sm:text-base font-bold text-slate-900">التخصصات المتاحة</h2>
                 <div className="mt-3.5 flex flex-wrap gap-1.5 sm:gap-2">
                   {programs.map((program, idx) => (
                     <Link
                       key={idx}
                       to={`/universities?country_id=${country._id}&program=${encodeURIComponent(program)}`}
-                      className="rounded-2xl bg-slate-100 px-3 py-1.5 text-[11px] sm:text-xs font-medium text-slate-700 hover:bg-amber-400/20 hover:text-slate-900 transition-colors"
+                      className="rounded-2xl bg-slate-50 border border-slate-100 px-3 py-1.5 text-[11px] sm:text-xs font-medium text-slate-700 hover:bg-amber-400/20 hover:border-amber-400/40 hover:text-slate-900 transition-colors shadow-sm"
                     >
                       {program}
                     </Link>
@@ -170,12 +170,17 @@ export default function CountryDetail() {
                 <GraduationCap className="h-5 w-5 text-amber-500" />
                 الجامعات والمعاهد
               </h2>
-              <span className="rounded-full bg-slate-100 px-3 py-1 text-[11px] sm:text-xs font-semibold text-slate-600">{institutions.length} مؤسسة</span>
+              <span className="rounded-full bg-slate-100 px-3.5 py-1 text-[11px] sm:text-xs font-semibold text-slate-600 shadow-sm">{institutions.length} مؤسسة</span>
             </div>
             {institutions.length > 0 ? (
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6">
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                 {institutions.map((institution) => (
-                  <InstitutionCard key={institution._id} institution={institution} />
+                  <div
+                    key={institution._id}
+                    className="max-w-[280px] sm:max-w-none mx-auto w-full h-full overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-2xl transition-all duration-300 hover:scale-[1.01]"
+                  >
+                    <InstitutionCard institution={institution} />
+                  </div>
                 ))}
               </div>
             ) : (

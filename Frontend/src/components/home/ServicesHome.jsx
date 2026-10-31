@@ -75,23 +75,23 @@ export default function ServicesHome() {
   }, []);
 
   return (
-    <section className="bg-white py-8 sm:py-16" dir="rtl">
-      <div className="container-page">
+    <section className="bg-white py-6 sm:py-16" dir="rtl">
+      <div className="container-page px-2 sm:px-6">
         <SectionHeading
           eyebrow="خدماتنا"
           title="كيف نساعدك؟"
           description="خدمات متكاملة تأخذ بيدك من الفكرة حتى السفر."
         />
 
-        {/* شبكة بطاقتين في الموبايل مع تقليل الارتفاعات والهوامش لتصبح مدمجة */}
-        <div className="mt-5 sm:mt-8 grid grid-cols-2 gap-2.5 sm:gap-5 lg:grid-cols-3">
+        {/* 2 in a row on small phones (grid-cols-2), transitioning to 3 columns on larger screens */}
+        <div className="mt-4 sm:mt-8 grid grid-cols-2 gap-2 sm:gap-5 lg:grid-cols-3">
           {loading
             ? Array.from({ length: 6 }).map((_, index) => (
-                <Skeleton key={index} className="h-36 sm:h-52 rounded-2xl" />
+                <Skeleton key={index} className="h-32 sm:h-52 rounded-2xl" />
               ))
             : services.map((service, index) => (
                 <Reveal key={service._id} delay={index * 0.04}>
-                  <div className="h-full [&_div]:p-2.5 sm:[&_div]:p-5 [&_h3]:text-xs sm:[&_h3]:text-lg [&_p]:text-[11px] sm:[&_p]:text-sm [&_span.h-12]:h-8 [&_span.h-12]:w-8 sm:[&_span.h-12]:h-11 sm:[&_span.h-12]:w-11">
+                  <div className="h-full [&_div]:p-3 sm:[&_div]:p-5 [&_h3]:text-xs sm:[&_h3]:text-lg [&_p]:text-[10px] sm:[&_p]:text-sm [&_p]:leading-relaxed">
                     <ServiceCard service={service} />
                   </div>
                 </Reveal>
