@@ -45,16 +45,16 @@ export default function CountriesHome() {
           description="اختر دولتك الدراسية بتكاليف وأنظمة تعليمية متنوعة تناسب طموحك وميزانيتك."
         />
 
-        {/* تقليل العرض الأقصى للبطاقة على الهواتف (max-w-[280px]) لتصبح أصغر حجماً */}
+        {/* تقليل العرض الأقصى للبطاقة على الهواتف (max-w-[280px]) وتعديل انحناء الحواف للشاشات الكبيرة */}
         <div className="mt-6 sm:mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {loading ? (
             Array.from({ length: 6 }).map((_, index) => (
-              <Skeleton key={index} className="h-64 sm:h-72 rounded-3xl max-w-[280px] sm:max-w-none mx-auto w-full" />
+              <Skeleton key={index} className="h-64 sm:h-72 rounded-3xl max-w-[280px] sm:max-w-none mx-auto w-full shadow-sm" />
             ))
           ) : countries.length > 0 ? (
             countries.map((country, index) => (
               <Reveal key={country._id} delay={index * 0.04}>
-                <div className="max-w-[280px] sm:max-w-none mx-auto w-full h-full overflow-hidden rounded-3xl sm:rounded-[2.5rem] border border-slate-100 bg-white shadow-2xl transition-all duration-300 hover:scale-[1.01]">
+                <div className="max-w-[280px] sm:max-w-none mx-auto w-full h-full overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-2xl transition-all duration-300 hover:scale-[1.01]">
                   <CountryCard country={country} />
                 </div>
               </Reveal>

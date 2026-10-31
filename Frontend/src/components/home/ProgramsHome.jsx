@@ -44,7 +44,7 @@ export default function ProgramsHome() {
           description="من الطب والهندسة إلى إدارة الأعمال والعلوم الإنسانية، تعرّف على التخصصات المتاحة واربطها بالمؤسسات التي تقدمها."
         />
 
-        {/* شبكة بطاقتين في الشاشات الصغيرة مع إضافة ظلال بارزة وعصرية */}
+        {/* شبكة بطاقتين في الشاشات الصغيرة مع تقليل انحناء الحواف إلى rounded-2xl والظلال البارزة */}
         <div className="mt-6 grid grid-cols-2 gap-2.5 sm:mt-10 sm:gap-4 lg:grid-cols-4">
           {loading ? (
             Array.from({ length: 8 }).map((_, index) => (
@@ -55,7 +55,7 @@ export default function ProgramsHome() {
               <Reveal key={program._id} delay={index * 0.03}>
                 <Link
                   to={`/universities?program=${encodeURIComponent(program.name)}`}
-                  className="flex items-center gap-2.5 sm:gap-3 rounded-2xl sm:rounded-3xl border border-slate-100 bg-white px-3.5 py-3 sm:px-4 sm:py-4 shadow-md sm:shadow-lg transition-all duration-200 hover:-translate-y-1 hover:border-[#0d8274]/40 hover:shadow-xl h-full"
+                  className="flex items-center gap-2.5 sm:gap-3 rounded-2xl border border-slate-100 bg-white px-3.5 py-3 sm:px-4 sm:py-4 shadow-md sm:shadow-lg transition-all duration-200 hover:-translate-y-1 hover:border-[#0d8274]/40 hover:shadow-xl h-full"
                 >
                   <span className="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-xl bg-[#0d8274]/10 text-[#0d8274]">
                     <ServiceIcon name={program.icon || "BookOpen"} className="h-3.5 w-3.5 sm:h-4 sm:w-4" />

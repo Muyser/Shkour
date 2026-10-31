@@ -45,25 +45,25 @@ export default function InstitutionsHome() {
             description="اختر مؤسستك من بين جامعات ومعاهد معتمدة، وتعرّف على التخصصات والمتطلبات قبل أن تبدأ طلبك."
           />
           <div className="flex gap-2">
-            <Link to="/universities" className="rounded-full border border-slate-200 bg-white px-3.5 py-1.5 text-xs font-semibold text-slate-700 transition hover:border-[#0d8274] hover:text-[#0d8274]">
+            <Link to="/universities" className="rounded-full border border-slate-200 bg-white px-3.5 py-1.5 text-xs font-semibold text-slate-700 transition hover:border-[#0d8274] hover:text-[#0d8274] shadow-sm">
               الجامعات
             </Link>
-            <Link to="/institutes" className="rounded-full border border-slate-200 bg-white px-3.5 py-1.5 text-xs font-semibold text-slate-700 transition hover:border-[#0d8274] hover:text-[#0d8274]">
+            <Link to="/institutes" className="rounded-full border border-slate-200 bg-white px-3.5 py-1.5 text-xs font-semibold text-slate-700 transition hover:border-[#0d8274] hover:text-[#0d8274] shadow-sm">
               المعاهد
             </Link>
           </div>
         </div>
 
-        {/* بطاقة واحدة لكل صف على الموبايل بنفس أسلوب قسم الدول بالضبط */}
+        {/* بطاقة واحدة لكل صف على الموبايل بنفس أسلوب بقية الأقسام */}
         <div className="mt-6 sm:mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {loading ? (
             Array.from({ length: 6 }).map((_, index) => (
-              <Skeleton key={index} className="h-64 sm:h-[360px] rounded-3xl max-w-[280px] sm:max-w-none mx-auto w-full" />
+              <Skeleton key={index} className="h-64 sm:h-[360px] rounded-3xl max-w-[280px] sm:max-w-none mx-auto w-full shadow-sm" />
             ))
           ) : items.length > 0 ? (
             items.map((institution, index) => (
               <Reveal key={institution._id} delay={index * 0.04}>
-                <div className="max-w-[280px] sm:max-w-none mx-auto w-full h-full overflow-hidden rounded-3xl sm:rounded-[2.5rem] border border-slate-100 bg-white shadow-2xl transition-all duration-300 hover:scale-[1.01]">
+                <div className="max-w-[280px] sm:max-w-none mx-auto w-full h-full overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-2xl transition-all duration-300 hover:scale-[1.01]">
                   <InstitutionCard institution={institution} />
                 </div>
               </Reveal>
