@@ -233,15 +233,15 @@ export default function InstitutionDetail() {
           <section className="grid gap-6 sm:grid-cols-2">
             <div className="rounded-3xl border border-slate-100 bg-white p-5 sm:p-6 shadow-md sm:shadow-lg">
               <h2 className="font-heading text-sm sm:text-base font-bold text-slate-900">الدرجات العلمية</h2>
-              <div className="mt-3.5">
+              {/* <div className="mt-3.5">
                 <Bullets items={institution.degrees} emptyText="غير متوفرة." />
-              </div>
+              </div> */}
             </div>
             <div className="rounded-3xl border border-slate-100 bg-white p-5 sm:p-6 shadow-md sm:shadow-lg">
               <h2 className="font-heading text-sm sm:text-base font-bold text-slate-900">متطلبات القبول</h2>
-              <div className="mt-3.5">
+              {/* <div className="mt-3.5">
                 <Bullets items={institution.admission_requirements} emptyText="غير متوفرة." />
-              </div>
+              </div> */}
             </div>
           </section>
 
@@ -272,7 +272,7 @@ export default function InstitutionDetail() {
                           : "border-slate-200 bg-slate-50 text-slate-600"
                       }`}
                     >
-                      {doc.required ? "مطلوب" : "اختياري"}
+                      {doc.required ? "مطلوب" : "مطلوب"}
                     </Badge>
                   </li>
                 ))

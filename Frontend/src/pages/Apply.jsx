@@ -361,7 +361,7 @@ export default function Apply() {
                     <li key={idx} className="flex items-center justify-between gap-2">
                       <span className="truncate text-slate-600">{doc.name}</span>
                       <span className={uploads[doc.name] ? "text-emerald-600 font-medium" : doc.required ? "text-amber-600 font-medium" : "text-slate-400"}>
-                        {uploads[doc.name] ? "تم الرفع" : doc.required ? "مطلوب" : "اختياري"}
+                        {uploads[doc.name] ? "تم الرفع" : doc.required ? "مطلوب" : "مطلوب"}
                       </span>
                     </li>
                   ))
