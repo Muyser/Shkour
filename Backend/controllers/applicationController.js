@@ -1,7 +1,38 @@
 import Application from "../models/Application.js";
 import Institution from "../models/Institution.js";
+import cloudinary from "../config/cloudinary.js";
 
-// 1. إنشاء طلب تقديم جديد (مع السماح بطلب واحد فقط للطالب بناءً على رقم الواتساب)
+// @desc    رفع ملف إلى Cloudinary مباشرة
+// @route   POST /api/applications/upload
+export const uploadFileToCloudinary = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: "لم يتم إرفاق أي ملف." });
+    }
+
+    // رفع الملف باستخدام buffer الخاص بـ Multer
+    const uploadStream = cloudinary.uploader.upload_stream(
+      { resource_type: "auto" }, // ليتعامل مع الصور، الـ PDFs، أو الفيديوهات تلقائياً
+      (error, result) => {
+        if (error) {
+          return res.status(500).json({ error: "فشل رفع الملف إلى السحابة: " + error.message });
+        }
+        res.status(200).json({
+          message: "تم رفع الملف بنجاح",
+          file_uri: result.secure_url, // الرابط الآمن من Cloudinary
+          file_name: req.file.originalname,
+        });
+      }
+    );
+
+    uploadStream.end(req.file.buffer);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// @desc    إنشاء طلب تقديم جديد (مع السماح بطلب واحد لكل واتساب لكل مؤسسة، والتحقق من المستندات الإلزامية)
+// @route   POST /api/applications
 export const createApplication = async (req, res) => {
   try {
     const {
@@ -17,21 +48,21 @@ export const createApplication = async (req, res) => {
       documents,
     } = req.body;
 
-    // التحقق عما إذا كان الطالب قد قدم مسبقاً برقم الواتساب
-    const existingApplication = await Application.findOne({ whatsapp });
-    if (existingApplication) {
-      return res.status(400).json({ 
-        error: "لديك طلب تقديم مسجل مسبقاً بهذا الرقم. يمكنك متابعة حالة طلبك عبر رقم التتبع." 
-      });
-    }
-
-    // التحقق من وجود المؤسسة وجلب متطلباتها
+    // 1. التحقق من وجود المؤسسة وجلب متطلباتها
     const institution = await Institution.findById(institution_id);
     if (!institution) {
       return res.status(404).json({ error: "المؤسسة غير موجودة" });
     }
 
-    // التحقق من المستندات الإلزامية الخاصة بالجامعة
+    // 2. التحقق عما إذا كان الطالب قد قدم مسبقاً لنفس المؤسسة بنفس رقم الواتساب
+    const existingApplication = await Application.findOne({ whatsapp, institution_id });
+    if (existingApplication) {
+      return res.status(400).json({ 
+        error: "لديك طلب تقديم مسجل مسبقاً لهذه المؤسسة بهذا الرقم. يمكنك متابعة حالة طلبك عبر رقم التتبع." 
+      });
+    }
+
+    // 3. التحقق من المستندات الإلزامية الخاصة بهذه المؤسسة فقط
     const requiredDocsList = (institution.required_documents || []).filter(doc => doc.required);
     for (const reqDoc of requiredDocsList) {
       const isUploaded = documents?.some(d => d.name === reqDoc.name && d.file_uri);
@@ -42,10 +73,13 @@ export const createApplication = async (req, res) => {
       }
     }
 
-    // توليد رقم تتبع فريد
+    // 4. معالجة التخصص (تأكيد حفظه كنص بشكل آمن سواء وصل ككائن أو نص)
+    const programValue = typeof program === "object" && program !== null ? program.name : program;
+
+    // 5. توليد رقم تتبع فريد
     const tracking_code = "SHK-" + new Date().getFullYear() + "-" + Math.floor(1000 + Math.random() * 9000);
 
-    // إنشاء الطلب (تم تعيين الحالة لتتطابق تماماً مع الـ Model العربي)
+    // 6. إنشاء الطلب في قاعدة البيانات
     const newApplication = await Application.create({
       student_name,
       nationality,
@@ -54,7 +88,7 @@ export const createApplication = async (req, res) => {
       current_country,
       last_qualification,
       grade,
-      program,
+      program: programValue,
       institution_id,
       documents: documents || [],
       tracking_code,
@@ -71,7 +105,7 @@ export const createApplication = async (req, res) => {
   }
 };
 
-// 2. جلب جميع الطلبات (مع دعم الفلترة حسب الحالة أو البحث)
+// @desc    جلب كافة الطلبات (للمشرفين)
 export const getApplications = async (req, res) => {
   try {
     const { status, search } = req.query;
@@ -81,21 +115,25 @@ export const getApplications = async (req, res) => {
       query.status = status;
     }
 
-    if (search) {
-      query.student_name = { $regex: search, $options: "i" };
+    if (search && search.trim() !== "") {
+      query.student_name = { $regex: search.trim(), $options: "i" };
     }
 
-    const items = await Application.find(query).sort({ createdAt: -1 });
-    res.json({ items });
+    const applications = await Application.find(query)
+      .populate("institution_id", "name type country city")
+      .sort({ createdAt: -1 });
+
+    // إرسال البيانات بالمفتاح items لتتطابق تماماً مع ما ينتظره الـ Frontend
+    res.json({ items: applications });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
-// 3. جلب طلب واحد بالتفصيل عبر الـ ID
+// @desc    جلب طلب محدد برقم الـ ID (للمشرفين)
 export const getApplicationById = async (req, res) => {
   try {
-    const application = await Application.findById(req.params.id);
+    const application = await Application.findById(req.params.id).populate("institution_id");
     if (!application) {
       return res.status(404).json({ error: "الطلب غير موجود" });
     }
@@ -105,31 +143,28 @@ export const getApplicationById = async (req, res) => {
   }
 };
 
-// 4. تحديث حالة الطلب والملاحظات الداخلية (للمشرفين)
+// @desc    تحديث حالة الطلب (للمشرفين)
 export const updateApplication = async (req, res) => {
   try {
-    const { status, admin_notes } = req.body;
     const updatedApplication = await Application.findByIdAndUpdate(
       req.params.id,
-      { status, admin_notes },
+      req.body,
       { new: true, runValidators: true }
     );
-
     if (!updatedApplication) {
       return res.status(404).json({ error: "الطلب غير موجود" });
     }
-
     res.json(updatedApplication);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(500).json({ error: error.message });
   }
 };
 
-// 5. حذف طلب
+// @desc    حذف طلب (للمشرفين)
 export const deleteApplication = async (req, res) => {
   try {
-    const deleted = await Application.findByIdAndDelete(req.params.id);
-    if (!deleted) {
+    const deletedApplication = await Application.findByIdAndDelete(req.params.id);
+    if (!deletedApplication) {
       return res.status(404).json({ error: "الطلب غير موجود" });
     }
     res.json({ message: "تم حذف الطلب بنجاح" });

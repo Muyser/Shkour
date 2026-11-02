@@ -14,6 +14,7 @@ import {
   MessageCircle,
   Phone,
   Wallet,
+  BookOpen,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -148,11 +149,8 @@ export default function InstitutionDetail() {
               </p>
 
               <div className="mt-6 flex flex-col gap-2.5 sm:flex-row">
-                <Button asChild className="w-full sm:w-auto rounded-2xl bg-amber-500 font-bold text-slate-900 hover:bg-amber-400 shadow-md text-xs sm:text-sm py-4">
-                  <Link to={`/apply/${targetId}`}>
-                    ابدأ التقديم
-                    <ArrowLeft className="ms-2 h-4 w-4 rotate-180" />
-                  </Link>
+                <Button asChild className="w-full rounded-2xl bg-amber-500 font-bold text-slate-900 hover:bg-amber-400 shadow-md text-xs sm:text-sm py-3.5">
+                  <Link to={`/apply/${institution._id || institution.id}`}>ابدأ التقديم</Link>
                 </Button>
                 <Button asChild variant="outline" className="w-full sm:w-auto rounded-2xl border-slate-200 text-slate-700 hover:bg-slate-50 text-xs sm:text-sm py-4 shadow-sm">
                   <a
@@ -193,22 +191,43 @@ export default function InstitutionDetail() {
 
       <div className="container-page grid gap-6 py-8 sm:py-16 lg:grid-cols-[1.6fr_1fr] text-right px-3 sm:px-6">
         <div className="space-y-6">
+          {/* قسم التخصصات التابعة لهذه المؤسسة حصرياً */}
           <section className="rounded-3xl border border-slate-100 bg-white p-5 sm:p-6 shadow-md sm:shadow-lg">
-            <h2 className="font-heading text-base sm:text-lg font-bold text-slate-900">التخصصات المتاحة</h2>
-            <div className="mt-3.5 flex flex-wrap gap-2">
-              {institution.programs?.length ? (
-                institution.programs.map((program, idx) => (
-                  <span
-                    key={idx}
-                    className="rounded-2xl border border-slate-100 bg-slate-50 px-3.5 py-1.5 text-[11px] sm:text-xs font-medium text-slate-700 shadow-sm"
-                  >
-                    {program}
-                  </span>
-                ))
-              ) : (
-                <p className="text-xs text-slate-500">لا توجد تخصصات مضافة حالياً.</p>
-              )}
-            </div>
+            <h2 className="font-heading text-base sm:text-lg font-bold text-slate-900 mb-4">التخصصات المتاحة في هذه المؤسسة</h2>
+            {institution.programs?.length ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                {institution.programs.map((program, idx) => {
+                  const progName = typeof program === "string" ? program : program.name;
+                  const progDegree = typeof program === "object" ? program.degree : null;
+                  const progDuration = typeof program === "object" ? program.duration : null;
+                  const progFees = typeof program === "object" ? program.tuition_fees : null;
+
+                  return (
+                    <div key={program._id || idx} className="rounded-2xl border border-slate-100 bg-slate-50/50 p-4 shadow-sm transition hover:shadow-md">
+                      <div className="flex items-start gap-3">
+                        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[#0d8274]/10 text-[#0d8274]">
+                          <BookOpen className="h-4 w-4" />
+                        </span>
+                        <div className="space-y-1">
+                          <h3 className="text-xs sm:text-sm font-bold text-slate-900">{progName}</h3>
+                          {progDegree && (
+                            <p className="text-[11px] text-slate-500 font-medium">الدرجة: {progDegree}</p>
+                          )}
+                          {progDuration && (
+                            <p className="text-[11px] text-slate-500">المدة: {progDuration}</p>
+                          )}
+                          {progFees && (
+                            <p className="text-[11px] font-semibold text-[#0d8274]">الرسوم: {progFees}</p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <p className="text-xs sm:text-sm text-slate-500">لا توجد تخصصات مضافة لهذه المؤسسة حالياً.</p>
+            )}
           </section>
 
           <section className="grid gap-6 sm:grid-cols-2">

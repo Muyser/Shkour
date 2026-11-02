@@ -1,4 +1,5 @@
 import Institution from "../models/Institution.js";
+import Program from "../models/Program.js";
 import cloudinary from "../config/cloudinary.js";
 
 // دالة مساعدة لرفع الصور إلى Cloudinary
@@ -36,7 +37,7 @@ export const getInstitutions = async (req, res) => {
   }
 };
 
-// @desc    الحصول على مؤسسة واحدة بواسطة ID
+// @desc    الحصول على مؤسسة واحدة بواسطة ID مع تخصصاتها الخاصة فقط
 // @route   GET /api/institutions/:id
 export const getInstitutionById = async (req, res) => {
   try {
@@ -44,7 +45,17 @@ export const getInstitutionById = async (req, res) => {
     if (!institution) {
       return res.status(404).json({ message: "المؤسسة غير موجودة" });
     }
-    res.json(institution);
+
+    // جلب التخصصات التابعة لهذه المؤسسة المحددة فقط عبر institution_id
+    const programs = await Program.find({ 
+      institution_id: req.params.id, 
+      is_visible: true 
+    }).sort("order");
+
+    res.json({
+      ...institution.toObject(),
+      programs: programs // مصفوفة تحتوي فقط على تخصصات هذه الجامعة/المعهد
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

@@ -139,9 +139,14 @@ export default function StudentForm({ data, onChange, institution, errors }) {
                   <SelectValue placeholder="اختر التخصص" />
                 </SelectTrigger>
                 <SelectContent className="rounded-2xl bg-white border border-slate-200 shadow-md max-h-60">
-                  {programs.map((program) => (
-                    <SelectItem key={program} value={program}>{program}</SelectItem>
-                  ))}
+                  {programs.map((program) => {
+                    const progName = typeof program === "string" ? program : program.name;
+                    return (
+                      <SelectItem key={program._id || progName} value={progName}>
+                        {progName}
+                      </SelectItem>
+                    );
+                  })}
                 </SelectContent>
               </Select>
             ) : (

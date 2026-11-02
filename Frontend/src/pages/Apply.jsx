@@ -14,8 +14,16 @@ import usePageTitle from "@/lib/usePageTitle";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
-const ALLOWED_TYPES = ["application/pdf", "image/jpeg", "image/jpg", "image/png"];
-const MAX_SIZE = 10 * 1024 * 1024;
+const ALLOWED_TYPES = [
+  "application/pdf", 
+  "image/jpeg", 
+  "image/jpg", 
+  "image/png",
+  "video/mp4",
+  "video/quicktime",
+  "video/webm"
+];
+const MAX_SIZE = 1024 * 1024 * 1024; // 1GB limit (متوافق مع إعدادات Multer)
 
 const EMPTY_DATA = {
   student_name: "",
@@ -29,7 +37,10 @@ const EMPTY_DATA = {
 };
 
 export default function Apply() {
-  const { institutionId } = useParams();
+  // دعم كلا التسميتين للـ params لضمان عدم ظهور undefined أبداً
+  const params = useParams();
+  const institutionId = params.institutionId || params.id;
+
   const [institution, setInstitution] = useState(null);
   const [loading, setLoading] = useState(true);
   const [step, setStep] = useState(1);
@@ -43,6 +54,12 @@ export default function Apply() {
 
   useEffect(() => {
     let active = true;
+    if (!institutionId) {
+      setLoading(false);
+      setInstitution(null);
+      return;
+    }
+
     fetch(`${API_URL}/api/institutions/${institutionId}`)
       .then((res) => res.json())
       .then((data) => {
@@ -70,29 +87,34 @@ export default function Apply() {
     (a, b) => (a.order || 0) - (b.order || 0)
   );
 
-  // دالة رفع الملفات عبر Cloudinary أو الخادم
   const handleFile = async (doc, file) => {
     if (!ALLOWED_TYPES.includes(file.type)) {
-      throw new Error("الصيغة غير مدعومة. المسموح: PDF أو JPG أو PNG.");
+      throw new Error("الصيغة غير مدعومة. المسموح: PDF أو الصور (JPG/PNG) أو الفيديوهات.");
     }
     if (file.size > MAX_SIZE) {
-      throw new Error("حجم الملف كبير. الحد الأقصى 10 ميجابايت.");
+      throw new Error("حجم الملف يتجاوز الحد الأقصى المسموح به (1 جيجابايت).");
     }
 
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append("file", file); // متطابق مع upload.single("file") في الباك إند
 
-    const res = await fetch(`${API_URL}/api/upload`, {
+    // 🚀 رفع الملف إلى مسار الـ Upload المربوط مع Cloudinary
+    const res = await fetch(`${API_URL}/api/applications/upload`, {
       method: "POST",
       body: formData,
     });
+
     const uploadRes = await res.json();
     
-    if (!res.ok) throw new Error(uploadRes.message || "فشل رفع الملف");
+    if (!res.ok) throw new Error(uploadRes.error || uploadRes.message || "فشل رفع الملف");
 
+    // تخزين الـ file_uri المباشر القادم من استجابة Cloudinary
     setUploads((prev) => ({
       ...prev,
-      [doc.name]: { file_uri: uploadRes.url || uploadRes.secure_url, file_name: file.name },
+      [doc.name]: { 
+        file_uri: uploadRes.file_uri || uploadRes.url || uploadRes.secure_url, 
+        file_name: uploadRes.file_name || file.name 
+      },
     }));
   };
 
@@ -108,7 +130,9 @@ export default function Apply() {
     const next = {};
     ["student_name", "nationality", "whatsapp", "current_country", "last_qualification", "grade", "program"].forEach(
       (field) => {
-        if (!String(data[field] || "").trim()) next[field] = true;
+        const val = data[field];
+        const strVal = typeof val === "object" && val !== null ? val.name : String(val || "");
+        if (!strVal.trim()) next[field] = true;
       }
     );
     if (data.whatsapp && data.whatsapp.replace(/\D/g, "").length < 8) next.whatsapp = true;
@@ -131,7 +155,6 @@ export default function Apply() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  // إرسال الطلب نهائياً للـ Backend
   const submit = async () => {
     if (missingRequired.length) {
       setSubmitError(`يجب رفع المستندات المطلوبة: ${missingRequired.map((doc) => doc.name).join("، ")}`);
@@ -141,8 +164,11 @@ export default function Apply() {
     setSubmitError("");
 
     try {
+      const programValue = typeof data.program === "object" && data.program !== null ? data.program.name : data.program;
+
       const payload = {
         ...data,
+        program: programValue,
         institution_id: institution._id || institution.id,
         documents: documents
           .filter((doc) => uploads[doc.name])
@@ -205,8 +231,8 @@ export default function Apply() {
     <div className="bg-white min-h-screen" dir="rtl">
       <div className="container-page py-8 sm:py-12">
         <Link
-          to={`${institution.type === "institute" ? "/institutes" : "/universities"}/${encodeURIComponent(
-            institution.slug || institution._id || institution.id
+          to={`/${institution.type === "institute" ? "institutes" : "universities"}/${encodeURIComponent(
+            institution._id || institution.id
           )}`}
           className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-500 transition hover:text-[#0d8274]"
         >

@@ -5,12 +5,17 @@ import {
   getApplicationById,
   updateApplication,
   deleteApplication,
+  uploadFileToCloudinary,
 } from "../controllers/applicationController.js";
 import { protect, admin } from "../middleware/authMiddleware.js";
+import { upload } from "../config/cloudinary.js"; // استيراد Multer من ملف إعدادات Cloudinary
 
 const router = express.Router();
 
-// مسار إنشاء طلب (متاح للطلاب - طلب واحد لكل واتساب)
+// 📁 مسار رفع الملفات والمستندات إلى Cloudinary (يجب وضعه قبل مسارات الـ :id)
+router.post("/upload", upload.single("file"), uploadFileToCloudinary);
+
+// مسار إنشاء طلب (متاح للطلاب - طلب واحد لكل واتساب لكل مؤسسة)
 router.post("/", createApplication);
 
 // مسارات لوحة التحكم الخاصة بالمشرفين (تتطلب مصادقة وصلاحية مشرف)

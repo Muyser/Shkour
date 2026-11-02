@@ -1,4 +1,3 @@
-
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle2, FileText, XCircle } from "lucide-react";
 
@@ -6,7 +5,7 @@ function Row({ label, value }) {
   return (
     <div className="flex items-start justify-between gap-4 py-2">
       <span className="text-xs text-muted-foreground">{label}</span>
-      <span className="text-sm font-medium text-primary">{value || "—"}</span>
+      <span className="text-sm font-medium text-primary text-left">{value || "—"}</span>
     </div>
   );
 }
@@ -14,8 +13,14 @@ function Row({ label, value }) {
 export default function ReviewStep({ data, institution, documents, uploads }) {
   const genderLabel = data.gender === "female" ? "أنثى" : "ذكر";
 
+  // استخراج اسم التخصص بأمان سواء كان نصاً أو كائناً
+  const programName = 
+    typeof data.program === "object" && data.program !== null 
+      ? data.program.name 
+      : data.program;
+
   return (
-    <div className="space-y-5">
+    <div className="space-y-5 text-right" dir="rtl">
       <section className="rounded-[var(--radius)] border border-border/70 bg-card p-5">
         <h2 className="font-heading text-base font-bold text-primary">بيانات الطالب</h2>
         <div className="mt-2 divide-y divide-border/60">
@@ -23,7 +28,6 @@ export default function ReviewStep({ data, institution, documents, uploads }) {
           <Row label="الجنسية" value={data.nationality} />
           <Row label="الجنس" value={genderLabel} />
           <Row label="واتساب" value={data.whatsapp} />
-          <Row label="البريد الإلكتروني" value={data.email} />
           <Row label="الدولة الحالية" value={data.current_country} />
         </div>
       </section>
@@ -33,7 +37,7 @@ export default function ReviewStep({ data, institution, documents, uploads }) {
         <div className="mt-2 divide-y divide-border/60">
           <Row label="آخر مؤهل دراسي" value={data.last_qualification} />
           <Row label="النسبة / الدرجة" value={data.grade} />
-          <Row label="التخصص المطلوب" value={data.program} />
+          <Row label="التخصص المطلوب" value={programName} />
           <Row label="الجامعة / المعهد" value={institution?.name} />
           <Row label="الدولة" value={institution?.country} />
         </div>
@@ -66,7 +70,7 @@ export default function ReviewStep({ data, institution, documents, uploads }) {
                       }`}
                     >
                       <XCircle className="me-1 h-3 w-3" />
-                      {doc.required ? "ناقص" : "لم يُرفع (اختياري)"}
+                      {doc.required ? "ناقص (إلزامي)" : "لم يُرفع (اختياري)"}
                     </Badge>
                   )}
                 </li>
